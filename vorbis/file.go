@@ -14,6 +14,11 @@ func WriteChapters(filename string, chapters types.Chapters) error {
 		return fmt.Errorf("failed to encode chapters: %w", err)
 	}
 
+	// safety check against catastrophic bugs
+	if !strings.HasSuffix(filename, ".txt") {
+		panic(fmt.Sprintf("refusing to write to non-text filename %q", filename))
+	}
+
 	return os.WriteFile(filename, []byte(encoded), 0644)
 }
 

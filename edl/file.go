@@ -9,6 +9,11 @@ import (
 func WriteFile(edlFile string, mediaFile string, chapters []int) error {
 	encoded := encodeChapters(mediaFile, chapters)
 
+	// safety check against catastrophic bugs
+	if !strings.HasSuffix(edlFile, ".edl") {
+		panic(fmt.Sprintf("refusing to write to non-edl filename %q", edlFile))
+	}
+
 	return os.WriteFile(edlFile, []byte(encoded), 0644)
 }
 
