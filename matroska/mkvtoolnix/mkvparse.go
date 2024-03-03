@@ -23,16 +23,7 @@ func GetDuration(filename string) (time.Duration, error) {
 	cmd.Stdout = &stdout
 
 	if err := cmd.Run(); err != nil {
-		// mkvinfo hates single quotes on Windows when run through Go:
-		// (MKVInfo) Error: Couldn't open source file S03E15 - Yesterday's Enterprise.mkv (open file error).
-		// (running mkvinfo manually on the command line works as expected, for some reason)
-		// So we just fallback to the slower, Go based parser in these cases.
-		dur, err := GetDurationSlow(filename)
-		if err != nil {
-			return 0, fmt.Errorf("%s failed and so did go-matroska in reading the file: %w", mkvinfoBinary, err)
-		}
-
-		return dur, nil
+		return 0, err
 	}
 
 	output := stdout.String()
